@@ -10,6 +10,7 @@
 		<script src="/javascripts/audiolet.js"></script>
 	</head>
 	<body>
+        <canvas id="canvas-rain" style="position : absolute; top : 0px; left : 0px; width: 100%; pointer-events: none; z-index: 1;"></canvas>
 		<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-md">
 				<div class="modal-content">
@@ -104,8 +105,8 @@
 			</div>
 		</div>
 		<div class="body">
-			<ul id="messages"></ul>
-	  		<form id="chatbar" action="">
+			<ul id="messages" style="z-index: 0;"></ul>
+	  		<form id="chatbar" action="" style="z-index: 2;">
 				<div class="form-group">
 					<div class="input-group">
 						<span class="input-group-btn">
@@ -120,7 +121,7 @@
 					</div>
 				</div>
 	  		</form>
-            <div class="ticker-bg" style="position: fixed; bottom: 40px; width: 100%; height: 34px; padding: 3px;">
+            <div class="ticker-bg" style="position: fixed; bottom: 40px; width: 100%; height: 34px; padding: 3px; z-index: 2;">
                 <button id="ticker-x" type="button" class="btn btn-default" style="padding-top: 3px; padding-bottom: 3px; color: #000000; float: right;">X</button>
                 <div class="ticker-parent" style="position: relative; width: 97.5%;">
                     <div id="sc-news" class="ticker" style="font: 1em Roboto, Helvetica, Arial;">
@@ -136,63 +137,7 @@
 	<script src="/javascripts/bootstrap.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js"></script>
 	<script src="/javascripts/tabcomplete.js"></script>
-	<script src="/javascripts/ticker.js" id="ticker-script"></script>
+	<script src="/javascripts/rainy.js"></script>
+	<script src="/javascripts/ticker.js"></script>
 	<script src="/javascripts/client.js"></script>
-	<script>
-		function loadGif(id, url) {
-			document.getElementById("hiddenInd" + id.toString()).setAttribute("src", "/images/ldg.png");
-			document.getElementById("hiddenInd" + id.toString()).setAttribute("onclick", "");
-			document.getElementById("hiddenImg" + id.toString()).setAttribute("src", url);
-			document.getElementById("hiddenLnk" + id.toString()).setAttribute("href", url);
-		}
-
-		function onGifLoaded(id) {
-			document.getElementById("hiddenInd" + id.toString()).style.display = "none";
-			document.getElementById("hiddenLnk" + id.toString()).style.display = "";
-		}
-	</script>
-	<script>
-		var isDay = true;
-		function toggleDayNight () {
-			var stylesheet1 = document.getElementById('stylesheet1');
-			var stylesheet2 = document.getElementById('stylesheet2');
-			var dayNightToggle = document.getElementById('daynbutton');
-			var dayNightImage = document.getElementById('daynimage');
-			//Text box
-			var mainTextBox = document.getElementById('m');
-			var hintTextBox = document.getElementById('mhint');
-			
-			if (isDay)
-			{
-				stylesheet1.setAttribute('href', '/stylesheets/bootstrap-night.min.css');
-				stylesheet2.setAttribute('href', '/stylesheets/style-night.css');
-				dayNightImage.setAttribute('src', '/images/day.png');
-				hintTextBox.style.backgroundColor = '#222222';
-				mainTextBox.style.color = '#ffffff';
-				isDay = false;
-			}
-			else
-			{
-				stylesheet1.setAttribute('href', '/stylesheets/bootstrap.min.css');
-				stylesheet2.setAttribute('href', '/stylesheets/style.css');
-				dayNightImage.setAttribute('src', '/images/night.png');
-				hintTextBox.style.backgroundColor = '#ffffff';
-				mainTextBox.style.color = '#000000';
-				isDay = true;
-			}
-		}
-	</script>
-	<script>
-		function togglePasswordField () {
-			var pwField = document.getElementById('password');
-			if (pwField.style.display == "none")
-			{
-				pwField.style.display = "";
-			}
-			else
-			{
-				pwField.style.display = "none";
-			}
-		}
-	</script>
 </html>

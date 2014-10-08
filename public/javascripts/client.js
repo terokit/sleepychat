@@ -20,6 +20,18 @@ var timeSinceLastMessage = Date.now();
 var isAFK = false;
 var isDCd = false;
 
+//Day/Night Mode
+var isDay = true;
+
+//For rain
+var isRaining = false;
+
+//For lightning
+var isLightning = false;
+
+//For halloween
+var isHalloween = false;
+
 //For news ticker
 var currentNews = [];
 var currentNewsInd = 0;
@@ -417,6 +429,14 @@ $.getScript('/javascripts/tabcomplete.js', function()
                         replaceTicker();
                     }
                 }
+                else if (msgInBox == "/rainy")
+                {
+                    toggleRain();
+                }
+                else if (msgInBox == "/halloween")
+                {
+                    toggleHalloween();
+                }
                 else
                 {
                     socket.emit('chat message', { message: msgInBox });
@@ -503,6 +523,21 @@ $.getScript('/javascripts/tabcomplete.js', function()
                 if (!newsTicker)
                 {
                     scrollDown(($(window).scrollTop() + $(window).height() + 300 >= $('body,html')[0].scrollHeight));
+                }
+            }
+            else if (msgInBox == "/rainy")
+            {
+                toggleRain();
+            }
+            else if (msgInBox == "/halloween")
+            {
+                if (isDay)
+                {
+                    toggleDayNight();
+                }
+                if (!isRaining)
+                {
+                    toggleRain();
                 }
             }
             else
@@ -706,6 +741,116 @@ function removeTicker()
     var messagesSection = document.getElementById('messages');
     messagesSection.style.paddingBottom = "40px";
     newsTicker = false;
+}
+
+function togglePasswordField ()
+{
+    var pwField = document.getElementById('password');
+    if (pwField.style.display == "none")
+    {
+        pwField.style.display = "";
+    }
+    else
+    {
+        pwField.style.display = "none";
+    }
+}
+
+function toggleDayNight ()
+{
+    var stylesheet1 = document.getElementById('stylesheet1');
+    var stylesheet2 = document.getElementById('stylesheet2');
+    var dayNightToggle = document.getElementById('daynbutton');
+    var dayNightImage = document.getElementById('daynimage');
+    //Text box
+    var mainTextBox = document.getElementById('m');
+    var hintTextBox = document.getElementById('mhint');
+
+    if (isDay)
+    {
+        stylesheet1.setAttribute('href', '/stylesheets/bootstrap-night.min.css');
+        stylesheet2.setAttribute('href', '/stylesheets/style-night.css');
+        dayNightImage.setAttribute('src', '/images/day.png');
+        hintTextBox.style.backgroundColor = '#222222';
+        mainTextBox.style.color = '#ffffff';
+        isDay = false;
+    }
+    else if (!isHalloween)
+    {
+        stylesheet1.setAttribute('href', '/stylesheets/bootstrap.min.css');
+        stylesheet2.setAttribute('href', '/stylesheets/style.css');
+        dayNightImage.setAttribute('src', '/images/night.png');
+        hintTextBox.style.backgroundColor = '#ffffff';
+        mainTextBox.style.color = '#000000';
+        isDay = true;
+    }
+    else
+    {
+        $('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] You're in Halloween Mode. Use \"/halloween\" to turn it off.</span>"));
+    }
+}
+
+function toggleRain ()
+{
+    if (!isHalloween)
+    {
+        isRaining = !isRaining;
+        document.getElementById('canvas-rain').setAttribute('raining', isRaining ? "true" : "false");
+    }
+    else if (!isRaining)
+    {
+        isRaining = !isRaining;
+        document.getElementById('canvas-rain').setAttribute('raining', isRaining ? "true" : "false");
+    }
+    else
+    {
+        $('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] You're in Halloween Mode. Use \"/halloween\" to turn it off.</span>"));
+    }
+}
+
+function toggleLightning ()
+{
+    isLightning = !isLightning;
+    document.getElementById('canvas-rain').setAttribute('lightning', isLightning ? "true" : "false");
+}
+
+function toggleHalloween()
+{
+    isHalloween = !isHalloween;
+    if (isHalloween)
+    {
+        if (!isRaining)
+        {
+            toggleRain();
+        }
+        if (isDay)
+        {
+            toggleDayNight();
+        }
+        toggleLightning();
+    }
+    else
+    {
+        if (isRaining)
+        {
+            toggleRain();
+        }
+        toggleDayNight();
+        toggleLightning();
+    }
+}
+
+function loadGif(id, url)
+{
+    document.getElementById("hiddenInd" + id.toString()).setAttribute("src", "/images/ldg.png");
+    document.getElementById("hiddenInd" + id.toString()).setAttribute("onclick", "");
+    document.getElementById("hiddenImg" + id.toString()).setAttribute("src", url);
+    document.getElementById("hiddenLnk" + id.toString()).setAttribute("href", url);
+}
+
+function onGifLoaded(id) {
+    document.getElementById("hiddenInd" + id.toString()).style.display = "none";
+    document.getElementById("hiddenLnk" + id.toString()).style.display = "";
 }
 
 window.onbeforeunload = confirmExit;
