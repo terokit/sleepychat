@@ -445,7 +445,7 @@ $.getScript('/javascripts/tabcomplete.js', function()
                     if (isMobile.any())
                     {
                         var scroll_down = isWithinScrollThreshold;
-                        $('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] /rainy is disabled on mobile devices. Sorry about that.</span>"));
+                        $('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] For performance reasons, /rainy is disabled on mobile devices. Sorry about that.</span>"));
                         scrollDown(scroll_down);
                     }
                     else
@@ -458,7 +458,7 @@ $.getScript('/javascripts/tabcomplete.js', function()
                     if (isMobile.any())
                     {
                         var scroll_down = isWithinScrollThreshold;
-                        $('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] /halloween is disabled on mobile devices. Sorry about that.</span>"));
+                        $('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] For performance reasons, /halloween is disabled on mobile devices. Sorry about that.</span>"));
                         scrollDown(scroll_down);
                     }
                     else
