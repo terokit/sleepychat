@@ -437,11 +437,29 @@ $.getScript('/javascripts/tabcomplete.js', function()
                 }
                 else if (msgInBox == "/rainy")
                 {
-                    toggleRain();
+                    if (isMobile.any())
+                    {
+                        var scroll_down = isWithinScrollThreshold;
+                        $('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] /rainy is disabled on mobile devices. Sorry about that.</span>"));
+                        scrollDown(scroll_down);
+                    }
+                    else
+                    {
+                        toggleRain();
+                    }
                 }
                 else if (msgInBox == "/halloween")
                 {
-                    toggleHalloween();
+                    if (isMobile.any())
+                    {
+                        var scroll_down = isWithinScrollThreshold;
+                        $('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] /halloween is disabled on mobile devices. Sorry about that.</span>"));
+                        scrollDown(scroll_down);
+                    }
+                    else
+                    {
+                        toggleHalloween();
+                    }
                 }
                 else
                 {
@@ -529,17 +547,28 @@ $.getScript('/javascripts/tabcomplete.js', function()
             }
             else if (msgInBox == "/rainy")
             {
-                toggleRain();
+                if (isMobile.any())
+                {
+                    var scroll_down = isWithinScrollThreshold;
+                    $('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] /rainy is disabled on mobile devices. Sorry about that.</span>"));
+                    scrollDown(scroll_down);
+                }
+                else
+                {
+                    toggleRain();
+                }
             }
             else if (msgInBox == "/halloween")
             {
-                if (isDay)
+                if (isMobile.any())
                 {
-                    toggleDayNight();
+                    var scroll_down = isWithinScrollThreshold;
+                    $('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] /halloween is disabled on mobile devices. Sorry about that.</span>"));
+                    scrollDown(scroll_down);
                 }
-                if (!isRaining)
+                else
                 {
-                    toggleRain();
+                    toggleHalloween();
                 }
             }
             else
