@@ -267,8 +267,9 @@ $.getScript('/javascripts/tabcomplete.js', function()
 			users = newList;
             if (!isMobile.any())
             {
+                var hadFocus = $("#m").is(":focus")
                 $('#m').tabcomplete(users, tcOptions);
-                $('#m').focus();
+                if (hadFocus) { $('#m').focus(); }
             }
 		});
 		
@@ -422,6 +423,10 @@ $.getScript('/javascripts/tabcomplete.js', function()
 		timeSinceLastMessage = Date.now();
 		if(bigchat)
 		{
+            if (!isMobile.any())
+            {
+                $('#m').focus();
+            }
 			$('#dcbutton').parent().hide();
 			$('#sendbutton').removeAttr('disabled');
 			$('#chatbar').unbind('submit');
