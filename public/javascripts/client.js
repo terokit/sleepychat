@@ -296,7 +296,7 @@ $.getScript('/javascripts/tabcomplete.js', function()
 					interval = setInterval(changeTitle, 1000);
 				}
 				
-				var scroll_down = isWithinScrollThreshold;
+				var scroll_down = isWithinScrollThreshold();
 				if(sender !== nick)
 				{
 					lastMessenger = sender;
@@ -330,7 +330,7 @@ $.getScript('/javascripts/tabcomplete.js', function()
 					interval = setInterval(changeTitle, 1000);
 				}
 
-				var scroll_down = isWithinScrollThreshold;
+				var scroll_down = isWithinScrollThreshold();
 
 				$('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ": " + msg));
 				var user = msg.match(/&lt;(.+)&gt;/);
@@ -373,7 +373,7 @@ $.getScript('/javascripts/tabcomplete.js', function()
 					clearInterval(interval);
 					interval = setInterval(changeTitle, 1000);
 				}
-				var scroll_down = isWithinScrollThreshold;
+				var scroll_down = isWithinScrollThreshold();
 				if (!(userFrom && ignore_list.indexOf(userFrom) != -1))
 				{
 					$('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ": <span class=\"information\">" + msg + "</span>"));
@@ -393,7 +393,7 @@ $.getScript('/javascripts/tabcomplete.js', function()
 			chatting = false;
 			$('#sendbutton').attr('disabled', true);
 			var themsg = '[INFO] ' + nick + ' has disconnected from you.';
-			var scroll_down = isWithinScrollThreshold;
+			var scroll_down = isWithinScrollThreshold();
 			$('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ": <span class=\"information\">" + themsg + "</span>"));
 			scrollDown(scroll_down);
 		});
@@ -408,7 +408,7 @@ $.getScript('/javascripts/tabcomplete.js', function()
 				clearInterval(interval);
 				interval = setInterval(changeTitle, 1000);
 			}
-			var scroll_down = isWithinScrollThreshold;
+			var scroll_down = isWithinScrollThreshold();
 			if (!denied)
 			{
 				$('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] Sorry! You seem to have been disconnected from the server. Please reload the page and try again.</span>"));
@@ -445,7 +445,7 @@ $.getScript('/javascripts/tabcomplete.js', function()
                 {
                     if (isMobile.any())
                     {
-                        var scroll_down = isWithinScrollThreshold;
+                        var scroll_down = isWithinScrollThreshold();
                         $('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] For performance reasons, /rainy is disabled on mobile devices. Sorry about that.</span>"));
                         scrollDown(scroll_down);
                     }
@@ -458,7 +458,7 @@ $.getScript('/javascripts/tabcomplete.js', function()
                 {
                     if (isMobile.any())
                     {
-                        var scroll_down = isWithinScrollThreshold;
+                        var scroll_down = isWithinScrollThreshold();
                         $('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] For performance reasons, /halloween is disabled on mobile devices. Sorry about that.</span>"));
                         scrollDown(scroll_down);
                     }
@@ -471,7 +471,7 @@ $.getScript('/javascripts/tabcomplete.js', function()
                 {
                     socket.emit('chat message', { message: msgInBox });
                     timeSinceLastMessage = Date.now();
-                    scrollDown(isWithinScrollThreshold);
+                    scrollDown(isWithinScrollThreshold());
                     
                 }
                 $('#m').val('');
@@ -523,7 +523,7 @@ $.getScript('/javascripts/tabcomplete.js', function()
 				if(chatting)
 				{
 					var msg = "[INFO] You have disconnected from " + lastChat + ".";
-					var scroll_down = isWithinScrollThreshold;
+					var scroll_down = isWithinScrollThreshold();
 					$('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ": <span class=\"information\">" + msg + "</span>"));
 					scrollDown(scroll_down);
 				}
@@ -548,14 +548,14 @@ $.getScript('/javascripts/tabcomplete.js', function()
             {
                 if (!newsTicker)
                 {
-                    scrollDown(isWithinScrollThreshold);
+                    scrollDown(isWithinScrollThreshold());
                 }
             }
             else if (msgInBox == "/rainy")
             {
                 if (isMobile.any())
                 {
-                    var scroll_down = isWithinScrollThreshold;
+                    var scroll_down = isWithinScrollThreshold();
                     $('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] /rainy is disabled on mobile devices. Sorry about that.</span>"));
                     scrollDown(scroll_down);
                 }
@@ -568,7 +568,7 @@ $.getScript('/javascripts/tabcomplete.js', function()
             {
                 if (isMobile.any())
                 {
-                    var scroll_down = isWithinScrollThreshold;
+                    var scroll_down = isWithinScrollThreshold();
                     $('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] /halloween is disabled on mobile devices. Sorry about that.</span>"));
                     scrollDown(scroll_down);
                 }
@@ -581,7 +581,7 @@ $.getScript('/javascripts/tabcomplete.js', function()
             {
                 socket.emit('chat message', { message: msgInBox });
                 timeSinceLastMessage = Date.now();
-                scrollDown(isWithinScrollThreshold);
+                scrollDown(isWithinScrollThreshold());
             }
             
 			$('#m').val('');
@@ -719,7 +719,7 @@ var stop = function() {
 	} catch (e) {}
 }
 
-var isWithinScrollThreshold = function() {
+function isWithinScrollThreshold() {
     
     return ($(window).scrollTop() + $(window).height() + 300 >= $('body,html')[0].scrollHeight);
 }
@@ -828,7 +828,7 @@ function toggleDayNight ()
     }
     else
     {
-        var scroll_down = isWithinScrollThreshold;
+        var scroll_down = isWithinScrollThreshold();
         $('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] You're in Halloween Mode. Use \"/halloween\" to turn it off.</span>"));
         scrollDown(scroll_down);
     }
@@ -848,7 +848,7 @@ function toggleRain ()
     }
     else
     {
-        var scroll_down = isWithinScrollThreshold;
+        var scroll_down = isWithinScrollThreshold();
         $('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] You're in Halloween Mode. Use \"/halloween\" to turn it off.</span>"));
         scrollDown(scroll_down);
     }
