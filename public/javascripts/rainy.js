@@ -108,7 +108,7 @@ function rendu(ctx) {
 		ctx.arc(activeDrops.X, activeDrops.Y, activeDrops.radius, 0, tau);
 		ctx.fill();
 	}
-    if (addingLightning && currentOpacity > 0)
+    if (currentOpacity > 0)
     {
         ctx.fillStyle = "hsla(0, 0%, 95%, " + Math.min(Math.max(currentOpacity, 0), 1) + ")";
         ctx.fillRect(0, 0, width, height);
@@ -120,46 +120,51 @@ function rendu(ctx) {
 function update() {
 	
 	canvas.style.top = $(window).scrollTop().toString()+"px";
-	
-	var localParticles = particles;
-	var localDrops = drops;
     
-    var dropStop = (body.style.paddingBottom == "40px") ? 40 : 80;
+    var thisTime = new Date();
+    var deltaTime = (thisTime.getTime() - lastTime.getTime()) / 1000;
+    deltaTime = Math.min(deltaTime, 0.03);
+    lastTime = thisTime;
 	
-	for (var i = 0, activeParticles; activeParticles = localParticles[i]; i++) {
-		activeParticles.X += activeParticles.speedX;
-		activeParticles.Y += activeParticles.speedY+5;
-		if (activeParticles.Y > height-dropStop) {
-			localParticles.splice(i--, 1);
-			explosion(activeParticles.X, activeParticles.Y, activeParticles.couleur);
-		}
-	}
-
-	for (var i = 0, activeDrops; activeDrops = localDrops[i]; i++) {
-		activeDrops.X += activeDrops.speedX;
-		activeDrops.Y += activeDrops.speedY;
-		activeDrops.radius -= 0.075;
-		if (activeDrops.alpha > 0) {
-			activeDrops.alpha -= 0.005;
-		} else {
-			activeDrops.alpha = 0;
-		}
-		if (activeDrops.radius < 0) {
-			localDrops.splice(i--, 1);
-		}
-	}
-
-	var i = 2;
-	while (i--) {
-		Rain(Math.floor((Math.random()*width)), -15);
-	}
-    
-    if (addingLightning)
+    if (canvas.getAttribute('raining') == "true")
     {
-        var thisTime = new Date();
-        var deltaTime = (thisTime.getTime() - lastTime.getTime()) / 1000;
-        lastTime = thisTime;
+        var localParticles = particles;
+        var localDrops = drops;
 
+        var dropStop = (body.style.paddingBottom == "40px") ? 40 : 80;
+
+        for (var i = 0, activeParticles; activeParticles = localParticles[i]; i++) {
+            activeParticles.X += activeParticles.speedX;
+            activeParticles.Y += activeParticles.speedY+5;
+            if (activeParticles.Y > height-dropStop) {
+                localParticles.splice(i--, 1);
+                explosion(activeParticles.X, activeParticles.Y, activeParticles.couleur);
+            }
+        }
+
+        for (var i = 0, activeDrops; activeDrops = localDrops[i]; i++) {
+            activeDrops.X += activeDrops.speedX;
+            activeDrops.Y += activeDrops.speedY;
+            activeDrops.radius -= 0.075;
+            if (activeDrops.alpha > 0) {
+                activeDrops.alpha -= 0.005;
+            } else {
+                activeDrops.alpha = 0;
+            }
+            if (activeDrops.radius < 0) {
+                localDrops.splice(i--, 1);
+            }
+        }
+
+        var i = 2;
+        while (i--) {
+            Rain(Math.floor((Math.random()*width)), -15);
+        }
+    }
+	
+    
+    if (canvas.getAttribute('lightning') == "true")
+    {
         if (waitLeft > 0)
         {
             waitLeft -= deltaTime;
@@ -227,14 +232,6 @@ function getRandomInt(min, max) {
 
 (function animate() {
 	requestAnimFrame(animate);
-    addingLightning = (canvas.getAttribute('lightning') == "true");
-	if (canvas.getAttribute('raining') == "true")
-	{
-		update();
-		rendu(ctx);
-	}
-	else
-	{
-		ctx.clearRect(0, 0, width, height);
-	}
+    update();
+    rendu(ctx);
 })();
