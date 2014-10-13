@@ -34,6 +34,7 @@ var isLightning = false;
 
 //For halloween
 var isHalloween = false;
+var wasInDayMode = true;
 
 //For news ticker
 var currentNews = [];
@@ -877,6 +878,7 @@ function toggleHalloween()
         {
             toggleRain();
         }
+        wasInDayMode = isDay;
         if (isDay)
         {
             toggleDayNight();
@@ -889,7 +891,10 @@ function toggleHalloween()
         {
             toggleRain();
         }
-        toggleDayNight();
+        if (wasInDayMode)
+        {
+            toggleDayNight();
+        }
         toggleLightning();
     }
 }

@@ -83,7 +83,7 @@ function explosion(X, Y, couleur, nombre) {
 	}
 }
 
-function rendu(ctx) {
+function draw(ctx) {
 
 	ctx.save();
 	ctx.clearRect(0, 0, width, height);
@@ -126,98 +126,102 @@ function update() {
     deltaTime = Math.min(deltaTime, 0.03);
     lastTime = thisTime;
 	
+    //--------
+    // Raining
+    //--------
+    var localParticles = particles;
+    var localDrops = drops;
+
+    var dropStop = (body.style.paddingBottom == "40px") ? 40 : 80;
+
+    for (var i = 0, activeParticles; activeParticles = localParticles[i]; i++) {
+        activeParticles.X += activeParticles.speedX;
+        activeParticles.Y += activeParticles.speedY+5;
+        if (activeParticles.Y > height-dropStop) {
+            localParticles.splice(i--, 1);
+            explosion(activeParticles.X, activeParticles.Y, activeParticles.couleur);
+        }
+    }
+
+    for (var i = 0, activeDrops; activeDrops = localDrops[i]; i++) {
+        activeDrops.X += activeDrops.speedX;
+        activeDrops.Y += activeDrops.speedY;
+        activeDrops.radius -= 0.075;
+        if (activeDrops.alpha > 0) {
+            activeDrops.alpha -= 0.005;
+        } else {
+            activeDrops.alpha = 0;
+        }
+        if (activeDrops.radius < 0) {
+            localDrops.splice(i--, 1);
+        }
+    }
+
+    
+	
     if (canvas.getAttribute('raining') == "true")
     {
-        var localParticles = particles;
-        var localDrops = drops;
-
-        var dropStop = (body.style.paddingBottom == "40px") ? 40 : 80;
-
-        for (var i = 0, activeParticles; activeParticles = localParticles[i]; i++) {
-            activeParticles.X += activeParticles.speedX;
-            activeParticles.Y += activeParticles.speedY+5;
-            if (activeParticles.Y > height-dropStop) {
-                localParticles.splice(i--, 1);
-                explosion(activeParticles.X, activeParticles.Y, activeParticles.couleur);
-            }
-        }
-
-        for (var i = 0, activeDrops; activeDrops = localDrops[i]; i++) {
-            activeDrops.X += activeDrops.speedX;
-            activeDrops.Y += activeDrops.speedY;
-            activeDrops.radius -= 0.075;
-            if (activeDrops.alpha > 0) {
-                activeDrops.alpha -= 0.005;
-            } else {
-                activeDrops.alpha = 0;
-            }
-            if (activeDrops.radius < 0) {
-                localDrops.splice(i--, 1);
-            }
-        }
-
         var i = 2;
         while (i--) {
             Rain(Math.floor((Math.random()*width)), -15);
         }
     }
-	
     
-    if (canvas.getAttribute('lightning') == "true")
+    // ---------
+    // Lightning
+    // ---------
+    if (waitLeft > 0)
     {
-        if (waitLeft > 0)
+        waitLeft -= deltaTime;
+    }
+    else if (canvas.getAttribute('lightning') == "true")
+    {
+        isMulti = (Math.random() > 0.75);
+        currentWait = getRandomArbitrary(minWait, maxWait);
+        waitLeft = currentWait;
+        flashing = true;
+        fading = false;
+    }
+
+    if (flashing)
+    {
+        if (currentOpacity < 1)
         {
-            waitLeft -= deltaTime;
+            currentOpacity += flashSpeed * deltaTime;
         }
         else
         {
-            isMulti = (Math.random() > 0.75);
-            currentWait = getRandomArbitrary(minWait, maxWait);
-            waitLeft = currentWait;
-            flashing = true;
+            fading = true;
+            flashing = false;
+        }
+    }
+
+    if (fading)
+    {
+        if (currentOpacity > 0)
+        {
+            currentOpacity -= fadeSpeed * deltaTime;
+        }
+        else
+        {
             fading = false;
         }
 
-        if (flashing)
+        if (isMulti && multiNumber < maxMulti)
         {
-            if (currentOpacity < 1)
+            if (currentOpacity < multiFade)
             {
-                currentOpacity += flashSpeed * deltaTime;
-            }
-            else
-            {
-                fading = true;
-                flashing = false;
+                flashing = true;
+                fading = false;
+                multiNumber++;
+                multiFade = getRandomArbitrary(0.6, 0.8);
             }
         }
-
-        if (fading)
+        else if (isMulti)
         {
-            if (currentOpacity > 0)
-            {
-                currentOpacity -= fadeSpeed * deltaTime;
-            }
-            else
-            {
-                fading = false;
-            }
-
-            if (isMulti && multiNumber < maxMulti)
-            {
-                if (currentOpacity < multiFade)
-                {
-                    flashing = true;
-                    fading = false;
-                    multiNumber++;
-                    multiFade = getRandomArbitrary(0.6, 0.8);
-                }
-            }
-            else if (isMulti)
-            {
-                isMulti = false;
-                multiNumber = 1;
-                maxMulti = getRandomInt(2, 4)
-            }
+            isMulti = false;
+            multiNumber = 1;
+            maxMulti = getRandomInt(2, 4)
         }
     }
 }
@@ -233,5 +237,5 @@ function getRandomInt(min, max) {
 (function animate() {
 	requestAnimFrame(animate);
     update();
-    rendu(ctx);
+    draw(ctx);
 })();
