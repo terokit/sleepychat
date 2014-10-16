@@ -81,7 +81,7 @@ $.getScript('/javascripts/tabcomplete.js', function()
     if (isMobile.any())
     {
         $('#rainy-script').remove();
-        $('canvas-rain').remove();
+        $('#canvas-rain').remove();
     }
     
     $('#mesg-alerts').click(function () {
