@@ -23,7 +23,7 @@ var date = new Date();
 var timeSinceLastMessage = Date.now();
 var isAFK = false;
 
-//Day/Night Mode
+//For Day/Night Mode
 var isDay = true;
 
 //For rain
@@ -794,6 +794,19 @@ function removeTicker()
     newsTicker = false;
 }
 
+function loadGif(id, url)
+{
+    document.getElementById("hiddenInd" + id.toString()).setAttribute("src", "/images/ldg.png");
+    document.getElementById("hiddenInd" + id.toString()).setAttribute("onclick", "");
+    document.getElementById("hiddenImg" + id.toString()).setAttribute("src", url);
+    document.getElementById("hiddenLnk" + id.toString()).setAttribute("href", url);
+}
+
+function onGifLoaded(id) {
+    document.getElementById("hiddenInd" + id.toString()).style.display = "none";
+    document.getElementById("hiddenLnk" + id.toString()).style.display = "";
+}
+
 function togglePasswordField ()
 {
     var pwField = document.getElementById('password');
@@ -897,19 +910,6 @@ function toggleHalloween()
         }
         toggleLightning();
     }
-}
-
-function loadGif(id, url)
-{
-    document.getElementById("hiddenInd" + id.toString()).setAttribute("src", "/images/ldg.png");
-    document.getElementById("hiddenInd" + id.toString()).setAttribute("onclick", "");
-    document.getElementById("hiddenImg" + id.toString()).setAttribute("src", url);
-    document.getElementById("hiddenLnk" + id.toString()).setAttribute("href", url);
-}
-
-function onGifLoaded(id) {
-    document.getElementById("hiddenInd" + id.toString()).style.display = "none";
-    document.getElementById("hiddenLnk" + id.toString()).style.display = "";
 }
 
 window.onbeforeunload = confirmExit;
