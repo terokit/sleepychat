@@ -461,12 +461,18 @@ io.on('connection', function(socket)
                     if(message.lastIndexOf('/svrmsg ', 0) === 0 && (user.admin || user.mod))
                     {
                         var command = '/svrmsg ';
-                        io.sockets.emit('information', "[SERVER MESSAGE] " + message.substring(command.length));
+                        var msg = message.substring(command.length);
+                        var link = /(?:https?:\/\/)?((?:[\w\-_.])+\.[\w\-_]+\/[\w\-_()\/\,]*(\.[\w\-_()\:]+)?(?:[\-\+=&;%@\.\w?#\/\:\,]*))/gi;
+                        msg = msg.replace(link, "<a tabindex='-1' target='_blank' href='http://$1'>$1</a>");
+                        io.sockets.emit('information', "[SERVER MESSAGE] " + msg);
                     }
                     else if(message.lastIndexOf('/rmmsg ', 0) === 0 && (user.admin || user.mod))
                     {
                         var command = '/rmmsg ';
-                        io.to('bigroom').emit('information', "[ROOM MESSAGE] " + message.substring(command.length));
+                        var msg = message.substring(command.length);
+                        var link = /(?:https?:\/\/)?((?:[\w\-_.])+\.[\w\-_]+\/[\w\-_()\/\,]*(\.[\w\-_()\:]+)?(?:[\-\+=&;%@\.\w?#\/\:\,]*))/gi;
+                        msg = msg.replace(link, "<a tabindex='-1' target='_blank' href='http://$1'>$1</a>");
+                        io.to('bigroom').emit('information', "[ROOM MESSAGE] " + msg);
                     }
                     else if(message.lastIndexOf('/lauren', 0) === 0 && user.nick == "Lauren")
                     {
@@ -1255,7 +1261,7 @@ function alterForFormatting(str, user)
 
 	var link = /(?:https?:\/\/)?((?:[\w\-_.])+\.[\w\-_]+\/[\w\-_()\/\,]*(\.[\w\-_()\:]+)?(?:[\-\+=&;%@\.\w?#\/\:\,]*))/gi; //matches "google.com/" and "blog.google.com/" and but not P.H.D. For details, see http://pastebin.com/8zQJmt9N
 	var subreddit = /\/r\/[A-Za-z0-9][A-Za-z0-9_]{2,20}[^ ]*/g; //matches /r/Hello
-    var strawpoll = /http:\/\/strawpoll\.me\/([0-9]{6,10})\/r/g; //matches http://strawpoll.me/*/r
+    var strawpoll = /http:\/\/strawpoll\.me\/([0-9]{6,10})(?:\/r)?/g; //matches http://strawpoll.me/*/r
 
 	var emoticons = /((?:\:\))|(?:XD)|(?:\:\()|(?:\:D)|(?:\:P)|(?:\:c)|(?:c\:)|(?:[oO]\.[oO])|(?:\>\:\))|(?:\>\:\()|(?:\:O)|(?:&#59\;\))|(?:&#59\;\())/g;
     
