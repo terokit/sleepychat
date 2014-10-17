@@ -885,6 +885,8 @@ function toggleDayNight ()
     //Text box
     var mainTextBox = document.getElementById('m');
     var hintTextBox = document.getElementById('mhint');
+    
+    var scrollValue = (isWithinScrollThreshold() ? -1 : $(window).scrollTop());
 
     if (isDay)
     {
@@ -894,6 +896,14 @@ function toggleDayNight ()
         hintTextBox.style.backgroundColor = '#222222';
         mainTextBox.style.color = '#ffffff';
         isDay = false;
+        if (scrollValue == -1)
+        {
+            scrollDown(true);
+        }
+        else
+        {
+            $(window).scrollTop(scrollValue);
+        }
     }
     else if (!isHalloween)
     {
@@ -903,6 +913,14 @@ function toggleDayNight ()
         hintTextBox.style.backgroundColor = '#ffffff';
         mainTextBox.style.color = '#000000';
         isDay = true;
+        if (scrollValue == -1)
+        {
+            scrollDown(true);
+        }
+        else
+        {
+            $(window).scrollTop(scrollValue);
+        }
     }
     else
     {
