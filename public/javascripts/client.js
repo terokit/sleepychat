@@ -13,6 +13,7 @@ var newchatclickedonce = false;
 var bigchat = false;
 var soundMesg = true;
 var soundWhsp = true;
+var soundJnLv = true;
 var soundSite = true;
 var denied = false;
 var isDCd = false;
@@ -94,10 +95,20 @@ $.getScript('/javascripts/tabcomplete.js', function()
         soundWhsp = this.checked;
     });
     
+    $('#jnlv-alerts').click(function () {
+        
+        soundJnLv = this.checked;
+    });
+    
     $('#site-alerts').click(function () {
         
         soundSite = this.checked;
     });
+    
+    soundMesg = $('#mesg-alerts').checked;
+    soundWhsp = $('#whsp-alerts').checked;
+    soundJnLv = $('#jnlv-alerts').checked;
+    soundSite = $('#site-alerts').checked;
     
 	$('#randomnick').click();
 	var socket = io("/", { reconnection: false, transport: ['websocket'] });
@@ -423,8 +434,16 @@ $.getScript('/javascripts/tabcomplete.js', function()
 			{
 				if(notify)
 				{
-					if(soundSite)
-						snd.play();
+                    if (msg.indexOf("has joined.") == -1 && msg.indexOf("has left.") == -1)
+                    {
+                        if(soundSite)
+                            snd.play();
+                    }
+                    else
+                    {
+                        if(soundJnLv)
+                            snd.play();
+                    }
                     
 					newTitle = "*** New message! ***";
 					clearInterval(interval);
