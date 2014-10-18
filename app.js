@@ -739,8 +739,21 @@ io.on('connection', function(socket)
                             io.to('bigroom').emit('information', "[INFO] " + tokick.nick + " has been struck by the Ban Hammer, swung by "+user.nick+". ("+days.toString()+" day ban)");
                             tokick.socket.leave('bigroom');
                             tokick.socket.conn.close();
-
-                            banList.push(nameIpPair);
+                            
+                            var replaced = false;
+                            for (var i = 0; i < banList.length; i++)
+                            {
+                                if (banList[i].ip == nameIpPair.ip)
+                                {
+                                    banList[i] = nameIpPair;
+                                    replaced = true;
+                                    break;
+                                }
+                            }
+                            
+                            if (!replaced)
+                                banList.push(nameIpPair);
+                            
                             updateBanList();
                         }
                         else
@@ -781,7 +794,20 @@ io.on('connection', function(socket)
                             tokick.socket.leave('bigroom');
                             tokick.socket.conn.close();
 
-                            banList.push(nameIpPair);
+                            var replaced = false;
+                            for (var i = 0; i < banList.length; i++)
+                            {
+                                if (banList[i].ip == nameIpPair.ip)
+                                {
+                                    banList[i] = nameIpPair;
+                                    replaced = true;
+                                    break;
+                                }
+                            }
+                            
+                            if (!replaced)
+                                banList.push(nameIpPair);
+                            
                             updateBanList();
                         }
                         else
@@ -820,7 +846,20 @@ io.on('connection', function(socket)
                             
                             socket.emit('information', "[INFO] IP " + postpass[0] + " has been struck by the Ban Hammer, swung by "+user.nick+". ("+days.toString()+" day ban)");
 
-                            banList.push(nameIpPair);
+                            var replaced = false;
+                            for (var i = 0; i < banList.length; i++)
+                            {
+                                if (banList[i].ip == nameIpPair.ip)
+                                {
+                                    banList[i] = nameIpPair;
+                                    replaced = true;
+                                    break;
+                                }
+                            }
+                            
+                            if (!replaced)
+                                banList.push(nameIpPair);
+                            
                             updateBanList();
                         }
                         else if (!tokick.admin)
@@ -850,7 +889,20 @@ io.on('connection', function(socket)
                             tokick.socket.leave('bigroom');
                             tokick.socket.conn.close();
 
-                            banList.push(nameIpPair);
+                            var replaced = false;
+                            for (var i = 0; i < banList.length; i++)
+                            {
+                                if (banList[i].ip == nameIpPair.ip)
+                                {
+                                    banList[i] = nameIpPair;
+                                    replaced = true;
+                                    break;
+                                }
+                            }
+                            
+                            if (!replaced)
+                                banList.push(nameIpPair);
+                            
                             updateBanList();
                         }
                         else
@@ -1319,15 +1371,16 @@ function alterForFormatting(str, user)
 	var link = /(?:https?:\/\/)?((?:[\w\-_.])+\.[\w\-_]+\/[\w\-_()\/\,]*(\.[\w\-_()\:]+)?(?:[\-\+=&;%@\.\w?#\/\:\,]*))/gi; //matches "google.com/" and "blog.google.com/" and but not P.H.D. For details, see http://pastebin.com/8zQJmt9N
 	var subreddit = /\/r\/[A-Za-z0-9][A-Za-z0-9_]{2,20}[^ ]*/g; //matches /r/Hello
     var strawpoll = /http:\/\/strawpoll\.me\/([0-9]{6,10})(?:\/r)?/g; //matches http://strawpoll.me/*/r
+    var youtube = /(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+(?:&|&#38;);v=))((?:\w|-|_){11})(?:(?:\?|&|&#38;)index=((?:\d){1,3}))?(?:(?:\?|&|&#38;)list=((?:\w|-|_){24}))?(?:\S+)?/g;
 
-	var emoticons = /((?:\:\))|(?:XD)|(?:\:\()|(?:\:D)|(?:\:P)|(?:\:c)|(?:c\:)|(?:[oO]\.[oO])|(?:\>\:\))|(?:\>\:\()|(?:\:O)|(?:&#59\;\))|(?:&#59\;\())/g;
+	var emoticons = /((?:\:\))|(?:XD)|(?:\:\()|(?:\:D)|(?:\:P)|(?:\:c)|(?:c\:)|(?:[oO]\.[oO])|(?:\>\:\))|(?:\>\:\()|(?:\:O)|(?:&#59\;\))|(?:&#59\;\())/;
     
     var ansCopy = ans;
     var changed = false;
     
     ansCopy = ansCopy.replace(strawpoll, "<span style=\"font-size: 24px; font-family: 'Sigmar One', sans-serif; color: #c83232; cursor: pointer;\" onclick=\"modalPoll('$1');\">Straw Poll <span style='font-size: 18px;'>(Click to vote!)</span></span>");
     
-	ansCopy = checkForYouTubeLinks(ansCopy);
+    ansCopy = ansCopy.replace(youtube, "^~$1~^~$3~^");
     
 	var prevans = ansCopy;
 	ansCopy = ansCopy.replace(link, link_replacer);
@@ -1676,11 +1729,6 @@ function updateFile(file, data)
     fs.writeFile(file, data, function(err) {
 		if (err) console.log(err);
 	});
-}
-
-function checkForYouTubeLinks(url) {
-  var p = /(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?/;
-  return (url.match(p)) ? url.replace(p, "^~$1~^") : url;
 }
 
 setInterval(function()

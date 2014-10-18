@@ -21,7 +21,7 @@ var isAFK = false;
 //For YouTube Embedding
 var apiKey = "NOTLOADED";
 var isYapiLoaded = false;
-var youTubeMatcher = /\^~([A-Za-z0-9-_]{11})~\^/g; // Matches stuff between ^~ ~^
+var youTubeMatcher = /\^~([A-Za-z0-9-_]{11})~\^~(?:([A-Za-z0-9-_]{24}))?~\^?/g; // Matches the video ID between ^~ ~^, and optionally matches the playlist ID between ~ ~^
 
 var isMobile = {
     Android: function() {
@@ -329,9 +329,9 @@ function modalPoll(pollId) {
 // -----------
 // For YouTube
 // -----------
-function modalYouTube(videoId) {
+function modalYouTube(videoId, playlistId) {
     
-    $('#iframe-modal-body').html("<iframe width='800' height='450' style='display: block; margin: auto;' src='http://www.youtube.com/embed/"+videoId+"' frameborder='0' allowfullscreen></iframe>");
+    $('#iframe-modal-body').html("<iframe width='800' height='450' style='display: block; margin: auto;' src='http://www.youtube.com/embed/"+videoId+(playlistId != "" ? ("?list="+playlistId) : "")+"' frameborder='0' allowfullscreen></iframe>");
     $('#iframe-modal-title').text("YouTube");
     
     $('#iframe-modal').modal({keyboard: true, backdrop: 'true'});
@@ -393,7 +393,7 @@ function youtubeRequestSucceeded (resp) {
         console.log('ERROR: Loading container not found for id: ' + resultingVideo.id);
     }
     
-    if (/*resultingVideo.processingDetails.processingStatus == "succeeded"*/true)
+    if (/*resultingVideo.processingDetails.processingStatus == "succeeded"*/true) // Need to find out which requests only require the API key and not OAuth.
     {
         correctContainer.className = "";
         correctContainer.style.verticalAlign = "middle";
@@ -401,8 +401,9 @@ function youtubeRequestSucceeded (resp) {
         
         var id = resultingVideo.id;
         var title = resultingVideo.snippet.title;
+        var playlist = correctContainer.getAttribute('playlistid');
         var channel = resultingVideo.snippet.channelTitle;
-        var channelLink = "http://http://www.youtube.com/channel/"+resultingVideo.snippet.channelId;
+        var channelLink = "http://www.youtube.com/channel/"+resultingVideo.snippet.channelId;
         
         var description = resultingVideo.snippet.description;
         var link = /(?:https?:\/\/)?((?:[\w\-_.])+\.[\w\-_]+\/[\w\-_()\/\,]*(\.[\w\-_()\:]+)?(?:[\-\+=&;%@\.\w?#\/\:\,]*))/gi;
@@ -412,16 +413,16 @@ function youtubeRequestSucceeded (resp) {
         var views = resultingVideo.statistics.viewCount.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         
         var length = resultingVideo.contentDetails.duration;
-        var hours = length.replace(/PT(?:([0-9])H)?(?:([0-9]{1,2})M)?([0-9]{1,2})S/g, "$1");
-        var minutes = length.replace(/PT(?:([0-9])H)?(?:([0-9]{1,2})M)?([0-9]{1,2})S/g, "$2");
-        var seconds = length.replace(/PT(?:([0-9])H)?(?:([0-9]{1,2})M)?([0-9]{1,2})S/g, "$3");
+        var hours = length.replace(/PT(?:([0-9])H)?(?:([0-9]{1,2})M)?(?:([0-9]{1,2})S)?/g, "$1");
+        var minutes = length.replace(/PT(?:([0-9])H)?(?:([0-9]{1,2})M)?(?:([0-9]{1,2})S)?/g, "$2");
+        var seconds = length.replace(/PT(?:([0-9])H)?(?:([0-9]{1,2})M)?(?:([0-9]{1,2})S)?/g, "$3");
         
         length = (hours.length != "" ? hours+":" : "");
         length += (hours != "" ? (minutes != "" ? (minutes.length < 2 ? "0"+minutes : minutes) : "00") : (minutes != "" ? minutes : "0"))+":";
         length += (seconds.length < 2 ? "0"+seconds : seconds);
         
         var displayString = "<div class='yt-video-container'>\n<div class='yt-thumbnail'>\n<a target='_blank' class='yt-thumbnail-imglink' href='http://www.youtube.com/watch?v="+id+"'>\n<span class='yt-thumbnail-imgspan'>\n<img class='yt-thumbnail-img' src='http://i.ytimg.com/vi/"+id+"/mqdefault.jpg' />\n</span>\n<span class='yt-thumbnail-time'>"+length+"</span>\n</a>\n</div>\n<div class='yt-details'>\n<h3 class='yt-details-title'><a target='_blank' href='http://www.youtube.com/watch?v="+id+"'>"+title+"</a></h3>\n<div style='display: block; margin: 5px 0 0;'>\n<ul class='yt-details-meta'>\n<li style='padding: 0px;'>by <a target='_blank' href='"+channelLink+"'>"+channel+"</a></li>\n<li style='padding: 0px;'>"+views+" views</li>\n</ul>\n</div>\n<div class='yt-details-desc'>"+description+"</div>\n</div>\n</div>";
-        var embedString = resultingVideo.status.embeddable ? "\n<div class='yt-video-container' style='width: 112px;' videoid='"+id+"'>\n<img src='/images/yt-play-embedded.png' style='cursor: pointer;' onclick='modalYouTube(\""+id+"\")' />\n</div>" : "\n<div class='yt-video-container' style='width: 112px;' videoid='"+id+"'>\n<img src='/images/yt-cant-embed.png' />\n</div>";
+        var embedString = resultingVideo.status.embeddable ? "\n<div class='yt-video-container' style='width: 112px;' videoid='"+id+" playlistid='"+playlist+"'>\n<img src='/images/yt-play-embedded.png' style='cursor: pointer;' onclick='modalYouTube(\""+id+"\", \""+playlist+"\")' />\n</div>" : "\n<div class='yt-video-container' style='width: 112px;' videoid='"+id+" playlistid='"+playlist+"'>\n<img src='/images/yt-cant-embed.png' />\n</div>";
         
         correctContainer.innerHTML = displayString+embedString;
     }
