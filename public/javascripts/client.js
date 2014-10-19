@@ -943,7 +943,7 @@ function toggleDayNight ()
             $(window).scrollTop(scrollValue);
         }
     }
-    else
+    else if (!isHalloween)
     {
         stylesheet1.setAttribute('href', '/stylesheets/bootstrap.min.css');
         stylesheet2.setAttribute('href', '/stylesheets/style.css');
@@ -959,6 +959,12 @@ function toggleDayNight ()
         {
             $(window).scrollTop(scrollValue);
         }
+    }
+    else
+    {
+        var scroll_down = isWithinScrollThreshold();
+        $('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] You're in Halloween Mode. Use \"/halloween\" to turn it off.</span>"));
+        scrollDown(scroll_down);
     }
 }
 
