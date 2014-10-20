@@ -49,6 +49,7 @@ var isLightning = false;
 //For halloween
 var isHalloween = false;
 var wasInDayMode = true;
+var wasDisabled = false;
 
 //For news ticker
 var currentNews = [];
@@ -85,6 +86,8 @@ var isMobile = {
 
 $.getScript('/javascripts/tabcomplete.js', function()
 {
+    $('#halloween-effects-label').tooltip();
+    
     if (isMobile.any())
     {
         $('#rainy-script').remove();
@@ -208,6 +211,13 @@ $.getScript('/javascripts/tabcomplete.js', function()
 
 			socket.emit('login', { nick: nick, pass: pass, gender: gender, role: role, chatwith: chatwith, type: type });
 			
+            if ($('#halloween-effects').prop('checked'))
+            {
+                $('#rainy-script').remove();
+                $('#canvas-rain').remove();
+                wasDisabled = true;
+            }
+			
 			timeSinceLastMessage = Date.now();
 			$('#login-modal').modal('hide');
 			return false;
@@ -261,6 +271,12 @@ $.getScript('/javascripts/tabcomplete.js', function()
 
 			socket.emit('login', { nick: nick2, pass: pass2, gender: gender, role: role, chatwith: chatwith, type: type, inBigChat: true });
 			
+            if ($('#halloween-effects').prop('checked'))
+            {
+                $('#rainy-script').remove();
+                $('#canvas-rain').remove();
+                wasDisabled = true;
+            }
 
 			$('#login-modal').modal('hide');
 			return false;
@@ -576,6 +592,12 @@ $.getScript('/javascripts/tabcomplete.js', function()
                         $('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] For performance reasons, /rainy is disabled on mobile devices. Sorry about that.</span>"));
                         scrollDown(scroll_down);
                     }
+                    else if (wasDisabled)
+                    {
+                        var scroll_down = isWithinScrollThreshold();
+                        $('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] You've disabled /rainy on the login dialog.</span>"));
+                        scrollDown(scroll_down);
+                    }
                     else
                     {
                         toggleRain();
@@ -587,6 +609,12 @@ $.getScript('/javascripts/tabcomplete.js', function()
                     {
                         var scroll_down = isWithinScrollThreshold();
                         $('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] For performance reasons, /halloween is disabled on mobile devices. Sorry about that.</span>"));
+                        scrollDown(scroll_down);
+                    }
+                    else if (wasDisabled)
+                    {
+                        var scroll_down = isWithinScrollThreshold();
+                        $('#messages').append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] You've disabled /halloween on the login dialog.</span>"));
                         scrollDown(scroll_down);
                     }
                     else
