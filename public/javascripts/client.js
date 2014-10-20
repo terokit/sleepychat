@@ -19,8 +19,13 @@ var soundSite = true;
 var denied = false;
 var isDCd = false;
 
+//For the 18+ disclaimer
+var wasConnectionAllowed = false;
+var isOnDisclaimer = true;
+
 //For YouTube Embedding
 var apiKey = "NOTLOADED";
+var isGapiLoaded = false;
 var isYapiLoaded = false;
 var youTubeMatcher = /\^~([A-Za-z0-9-_]{11})~\^~(?:([A-Za-z0-9-_]{24}))?~\^?/g; // Matches the video ID between ^~ ~^, and optionally matches the playlist ID between ~ ~^
 
@@ -86,31 +91,44 @@ $.getScript('/javascripts/tabcomplete.js', function()
         $('#canvas-rain').remove();
     }
     
+    // Disclaimer setup
+    $('#disclaimer-modal').modal({keyboard: false, backdrop: 'static'});
+    $('#accept-button').click(function() {
+        
+        isOnDisclaimer = false;
+        $('#disclaimer-modal').modal('hide');
+        if (wasConnectionAllowed)
+        {
+            $('#login-modal').modal({keyboard: false, backdrop: 'static'});
+        }
+    });
+    $('#deny-button').click(function() {
+        
+        window.history.back();
+    });
+    
+    
+    // Sound setup
     $('#mesg-alerts').click(function () {
         
         soundMesg = this.checked;
     });
-    
     $('#ment-alerts').click(function () {
         
         soundMent = this.checked;
     });
-    
     $('#whsp-alerts').click(function () {
         
         soundWhsp = this.checked;
     });
-    
     $('#jnlv-alerts').click(function () {
         
         soundJnLv = this.checked;
     });
-    
     $('#site-alerts').click(function () {
         
         soundSite = this.checked;
     });
-    
     soundMesg = $('#mesg-alerts').checked;
     soundMent = $('#ment-alerts').checked;
     soundWhsp = $('#whsp-alerts').checked;
@@ -250,12 +268,26 @@ $.getScript('/javascripts/tabcomplete.js', function()
         
         socket.on('allow', function(googleApiKey)
 		{
-			$('#login-modal').modal({keyboard: false, backdrop: 'static'});
+			if (!isOnDisclaimer)
+            {
+                $('#login-modal').modal({keyboard: false, backdrop: 'static'});
+            }
+            else
+            {
+                wasConnectionAllowed = true;
+            }
             
             apiKey = googleApiKey.keyString;
             if (!isYapiLoaded)
             {
-                youtubeApiLoad();
+                if (isGapiLoaded)
+                {
+                    youtubeApiLoad();
+                }
+                else
+                {
+                    console.log("Warining: Google API Script not yet loaded. Waiting...");
+                }
             }
 		});
 		
@@ -1060,6 +1092,7 @@ function requestYouTubeEmbed (videoId) {
 
 function youtubeApiLoad() {
     
+    isGapiLoaded = true;
     if (apiKey != "NOKEY" && apiKey != "NOTLOADED")
     {
         gapi.client.setApiKey(apiKey);
