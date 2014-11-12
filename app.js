@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', function(req, res) {
     
-    res.send('The site has been shut down temporarily. Please check back later. Sorry for the inconvenience.');
+    res.render('shutdown');
 });
 
 /// catch 404 and render the 404 page
