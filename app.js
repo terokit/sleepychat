@@ -312,6 +312,7 @@ io.on('connection', function(socket)
                         socket.join('bigroom');
                         io.to('bigroom').emit('information', "[INFO] " + getAuthority(user) + nameAppend(user.nick, user.gender, user.role) + " has joined.");
                         io.to('bigroom').emit('rosterupdate', generateRoster(users));
+                        socket.emit('information', "[INFO] <span style='color: red;'>IMPORTANT NEWS: </span>Users have been attempting to advertise a dangerous and predatory IRC channel called #coverthypnotism, even going so far as to spam this site. Immediately report <strong>everyone</strong> that mentions this IRC channel to a mod or admin.");
                         if (!user.mod && !user.admin) { socket.emit('information', "[INFO] If you're new, type \"/help\" and hit enter to see a list of commands."); }
                         if (data.isMobile)
                         {
@@ -1606,10 +1607,12 @@ var disallowedNames = [/(?:a|4)dm(?:i|!|1)n/gi,                             //Ad
                        /r(?:a|4)p(?:e|(?:i|!|1)(?:s|5)(?:t|7))/gi,          //Rap(e OR ist)
                        /r(?:a|4)c(?:i|!|1)(?:s|5)(?:t|7)/gi,                //Racist
                        /cun(?:t|7)/gi,                                      //Cunt
+                       /c(?:_{1,9})?(?:o|0)(?:_{1,9})?v(?:_{1,9})?(?:e|3)(?:_{1,9})?r(?:_{1,9})?(?:t|7)/gi, //Covert
                        /all/gi                                              //all
                       ];
 
-var disallowedPhrases = [/n(?:i|!|1)gg(?:a|(?:e|3)r)/gi,        //Nigg(a OR er)
+var disallowedPhrases = [/c(?:(?: |_){1,9})?(?:o|0)(?:(?: |_){1,9})?v(?:(?: |_){1,9})?(?:e|3)(?:(?: |_){1,9})?r(?:(?: |_){1,9})?(?:t|7)(?:(?: |_){1,9})?h(?:(?: |_){1,9})?y(?:(?: |_){1,9})?p(?:(?: |_){1,9})?n(?:(?: |_){1,9})?(?:o|0)(?:(?: |_){1,9})?(?:t|7)(?:(?: |_){1,9})?(?:i|!|1)(?:(?: |_){1,9})?(?:s|5)(?:(?: |_){1,9})?m/gi, //coverthypnotism
+                         /n(?:i|!|1)gg(?:a|(?:e|3)r)/gi,        //Nigg(a OR er)
                          /cun(?:t|7)/gi,                        //Cunt
                         ];
 
