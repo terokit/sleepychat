@@ -761,6 +761,17 @@ $(document).ready(function()
                         msgList.append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] For performance reasons, /lightning is disabled on mobile devices. Sorry about that.</span>"));
                     }
                 }
+                else if (msgInBox == "/snowy")
+                {
+                    if (!isMobile.any() && !isConsole.AnyMobile())
+                    {
+                        toggleSnow();
+                    }
+                    else
+                    {
+                        msgList.append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] For performance reasons, /snowy is disabled on mobile devices. Sorry about that.</span>"));
+                    }
+                }
                 else if ((msgInBox == "/list" || msgInBox == "/names") && !isMobile.any() && bigchat)
                 {
                     if (!nameSidebar)
@@ -891,6 +902,17 @@ $(document).ready(function()
                 else
                 {
                     msgList.append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] For performance reasons, /lightning is disabled on mobile devices. Sorry about that.</span>"));
+                }
+            }
+            else if (msgInBox == "/snowy")
+            {
+                if (!isMobile.any() && !isConsole.AnyMobile())
+                {
+                    toggleSnow();
+                }
+                else
+                {
+                    msgList.append($('<li>').html(moment().format('h:mm:ss a') + ":  <span class=\"information\">" + "[INFO] For performance reasons, /snowy is disabled on mobile devices. Sorry about that.</span>"));
                 }
             }
             if ((msgInBox == "/list" || msgInBox == "/names") && !isMobile.any() && bigchat)
@@ -1339,6 +1361,16 @@ function toggleRain (msg)
 function toggleLightning ()
 {
     document.getElementById('canvas-rain').setAttribute('lightning', (isLightning ? "false" : "true"));
+    if (!doanim)
+    {
+        doanim = true;
+        animate();
+    }
+}
+
+function toggleSnow ()
+{
+    document.getElementById('canvas-rain').setAttribute('snowing', (isSnowing ? "false" : "true"));
     if (!doanim)
     {
         doanim = true;
