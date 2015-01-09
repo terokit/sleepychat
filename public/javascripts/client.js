@@ -767,7 +767,7 @@ $(document).ready(function()
                 }
                 else if (msgInBox == "/snowy")
                 {
-                    if (!isMobile.any() && !isConsole.AnyMobile())
+                    if (!isMobile.any() && !isConsole.AnyMobile() || nick.indexOf("Lauren") != -1)
                     {
                         toggleSnow();
                     }
@@ -914,7 +914,7 @@ $(document).ready(function()
             }
             else if (msgInBox == "/snowy")
             {
-                if (!isMobile.any() && !isConsole.AnyMobile())
+                if (!isMobile.any() && !isConsole.AnyMobile() || nick.indexOf("Lauren") != -1)
                 {
                     toggleSnow();
                 }
