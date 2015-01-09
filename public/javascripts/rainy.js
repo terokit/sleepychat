@@ -42,7 +42,9 @@ for(var i = 0; i < maxSnow; i++)
         x: Math.random()*width, //x-coordinate
         y: Math.random()*height, //y-coordinate
         r: Math.random()*4+1, //radius
-        d: Math.random()*maxSnow //density
+        d: Math.random()*maxSnow, //density
+        s: Math.random()*10-5, //rotation speed
+        a: 0 //angle
     })
 }
 
@@ -66,6 +68,10 @@ var isLightning = false;
 var isSnowing = false;
 var shouldquit = false;
 var doanim = false;
+
+var TO_RADIANS = Math.PI/180;
+var pizza = new Image();
+pizza.src = "/images/pizza.png";
 
 function Rain(X, Y, nombre) {
 	if (!nombre) {
@@ -102,6 +108,24 @@ function explosion(X, Y, couleur, nombre) {
 	}
 }
 
+function drawPizza (X, Y, rot, percent) {
+    
+    var pxlSize = 32*percent;
+    
+    var halfPxlSize = pxlSize/2;
+    
+    ctx.save();
+    
+    ctx.translate(X, Y);
+    ctx.translate(halfPxlSize, halfPxlSize);
+    
+    ctx.rotate(rot*TO_RADIANS);
+    
+    ctx.drawImage(pizza, -halfPxlSize, -halfPxlSize, pxlSize, pxlSize);
+    
+    ctx.restore();
+}
+
 function draw(ctx) {
 
 	ctx.save();
@@ -131,17 +155,26 @@ function draw(ctx) {
     {
         for (var i = 0, activeSnow; activeSnow = snowParts[i]; i++)
         {
-            ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-            ctx.beginPath();
-            for(var i = 0; i < maxSnow; i++)
+            if (nick.indexOf("Lauren") != -1)
             {
-                var p = snowParts[i];
-                ctx.moveTo(p.x, p.y);
-                ctx.arc(p.x, p.y, p.r, 0, Math.PI*2, true);
+                snowParts[i].a += snowParts[i].s;
+                drawPizza(snowParts[i].x, snowParts[i].y, snowParts[i].a, snowParts[i].r/5);
             }
-            ctx.closePath();
-            ctx.fill();
+            else
+            {
+                ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+                ctx.beginPath();
+                for(var i = 0; i < maxSnow; i++)
+                {
+                    var p = snowParts[i];
+                    ctx.moveTo(p.x, p.y);
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI*2, true);
+                }
+                ctx.closePath();
+                ctx.fill();
+            }
         }
+        console.log(snowParts[0].s);
     }
     if (currentOpacity > 0)
     {
@@ -159,7 +192,6 @@ function update() {
     isRainy = canvas.getAttribute('raining') == "true";
     isLightning = canvas.getAttribute('lightning') == "true";
     isSnowing = canvas.getAttribute('snowing') == "true";
-    console.log(isSnowing);
     
     var thisTime = new Date();
     var deltaTime = (thisTime.getTime() - lastTime.getTime()) / 1000;
@@ -288,7 +320,7 @@ function update() {
 			{
 				if(i%3 > 0) //66.67% of the flakes
 				{
-					snowParts[i] = {x: Math.random()*width, y: -10, r: p.r, d: p.d};
+					snowParts[i] = {x: Math.random()*width, y: -10, r: p.r, d: p.d, s: p.s, a: p.a };
 				}
 				else
 				{
