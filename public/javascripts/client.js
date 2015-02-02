@@ -1309,12 +1309,14 @@ function toggleDayNight ()
         stylesheet1.after("<link rel='stylesheet' type='text/css' href='/stylesheets/night/bootstrap.min.css' id='stylesheet4' />");
         stylesheet2.after("<link rel='stylesheet' type='text/css' href='/stylesheets/night/bootstrap-theme.min.css' id='stylesheet5' />");
         stylesheet3.after("<link rel='stylesheet' type='text/css' href='/stylesheets/night/style.css' id='stylesheet6' />");
+        $('#logo').attr('src', '/images/logo-night.jpg');
     }
     else
     {
         $('#stylesheet4').remove();
         $('#stylesheet5').remove();
         $('#stylesheet6').remove();
+        $('#logo').attr('src', '/images/logo-day.jpg');
         
     };
     dayNightImage.setAttribute('src', '/images/'+(isDay ? "day" : "night")+'.png');
