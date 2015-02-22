@@ -2187,6 +2187,10 @@ app.use('/commands', function(req, res)
 {
 	res.render('commands');
 });
+app.use('/2257exemption', function(req, res)
+{
+	res.render('2257exemption');
+});
 
 /// catch 404 and render the 404 page
 app.use(function(req, res, next){
